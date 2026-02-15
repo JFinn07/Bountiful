@@ -1,5 +1,5 @@
 modLoader = "kotlinforforge"
-loaderVersion = "[4,)"
+loaderVersion = "${forgelike_adapter_version_range}"
 #issueTrackerURL = ""
 license = "GPL 3.0"
 
@@ -19,7 +19,14 @@ config = "bountiful.mixins.json"
 [[dependencies.bountiful]]
 modId = "neoforge"
 type="required"
-versionRange = "[20.2.88,)"
+versionRange = "[21.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.bountiful]]
+modId = "kotlinforforge"
+type="required"
+versionRange = "${forgelike_adapter_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
@@ -33,6 +40,6 @@ side = "BOTH"
 [[dependencies.bountiful]]
 modId = "minecraft"
 type="required"
-versionRange = "${minecraft_version}"
+versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"

@@ -4,11 +4,8 @@ import io.ejekta.bountiful.bridge.Bountybridge
 import io.ejekta.bountiful.client.AnalyzerScreen
 import io.ejekta.bountiful.client.BoardScreen
 import io.ejekta.bountiful.config.BountifulIO
-import io.ejekta.bountiful.content.gui.AnalyzerScreenHandler
-import io.ejekta.bountiful.content.gui.BoardScreenHandler
+import io.ejekta.bountiful.content.BountifulContent
 import net.minecraft.client.gui.screens.MenuScreens
-import net.minecraft.world.flag.FeatureFlagSet
-import net.minecraft.world.inventory.MenuType
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.ModLoadingContext
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
@@ -40,17 +37,11 @@ object BountifulForgeClient {
     @SubscribeEvent
     fun onRegisterClientComponents(event: RegisterMenuScreensEvent) {
         event.register(
-            MenuType(
-                MenuType.MenuSupplier(::BoardScreenHandler),
-                FeatureFlagSet.of()
-            ),
+            BountifulContent.BOARD_SCREEN_HANDLER,
             MenuScreens.ScreenConstructor(::BoardScreen)
         )
         event.register(
-            MenuType(
-                MenuType.MenuSupplier(::AnalyzerScreenHandler),
-                FeatureFlagSet.of()
-            ),
+            BountifulContent.ANALYZER_SCREEN_HANDLER,
             MenuScreens.ScreenConstructor(::AnalyzerScreen)
         )
     }

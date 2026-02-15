@@ -33,6 +33,11 @@ dependencies {
     modImplementation "net.fabricmc:fabric-language-kotlin:1.12.3+kotlin.2.0.21"
 }
 
+jar {
+    from(project(':common').sourceSets.main.output)
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+}
+
 loom {
     def aw = project(':common').file("src/main/resources/${mod_id}.accesswidener")
     if (aw.exists()) {

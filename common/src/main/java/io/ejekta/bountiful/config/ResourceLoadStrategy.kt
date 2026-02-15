@@ -81,6 +81,8 @@ class ResourceLoadStrategy<T : IMerge<T>>(
             it.fileName()
         }
 
+        Bountiful.LOGGER.info("Starting $strategyName with ${resourceMap.size} resource groups")
+
         for ((itemId, resources) in resourceMap) {
             Bountiful.LOGGER.debug("Querying $strategyName: $itemId, $resources")
 
@@ -126,6 +128,8 @@ class ResourceLoadStrategy<T : IMerge<T>>(
 
         }
         loadUnloadedFiles()
+
+        Bountiful.LOGGER.info("Finished $strategyName, loaded ${loadedData.size} entries")
 
         onComplete(loadedData)
     }

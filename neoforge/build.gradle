@@ -9,11 +9,17 @@ repositories {
         name = 'Kotlin for Forge'
         url = 'https://thedarkcolour.github.io/KotlinForForge/'
     }
+    maven {
+        name = 'Architectury Maven'
+        url = 'https://maven.architectury.dev/'
+    }
 }
 
 dependencies {
     implementation("thedarkcolour:kotlinforforge-neoforge:${forgelike_adapter_version}")
+    implementation("me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}")
     implementation("io.ejekta.kambrik:kambrik-neoforge:${kambrik_version}")
+    implementation("io.ejekta.percale:percale-neoforge:${percale_version}")
 }
 
 neoForge {

@@ -85,9 +85,11 @@ object BountifulIO {
             it.loadData(manager)
         }
         // After all data is loaded, lint it
+        Bountiful.LOGGER.info("Starting lint pass for bounty data")
         contentLoaders.forEach {
             it.lint()
         }
+        Bountiful.LOGGER.info("Finished lint pass for bounty data")
     }
 
     private val contentLoaders = listOf(
