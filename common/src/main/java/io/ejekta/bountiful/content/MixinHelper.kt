@@ -2,7 +2,9 @@ package io.ejekta.bountiful.content
 
 import com.google.common.collect.ImmutableList
 import io.ejekta.bountiful.content.item.DecreeItem
+import io.ejekta.bountiful.content.villager.FindBoardTask
 import io.ejekta.bountiful.content.villager.WalkToBoardTask
+import io.ejekta.bountiful.util.ensureMemoryModules
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.ai.behavior.BehaviorControl
 import net.minecraft.world.entity.npc.Villager
@@ -28,6 +30,29 @@ object MixinHelper {
             )
         )
         cir.setReturnValue(ImmutableList.copyOf(options))
+    }
+
+    fun injectCoreTasks(
+        profession: VillagerProfession,
+        speed: Float,
+        cir: CallbackInfoReturnable<ImmutableList<MojangPair<Int, out BehaviorControl<in Villager?>?>>>
+    ) {
+        val options = cir.returnValue.toMutableList()
+        @Suppress("UNCHECKED_CAST")
+        val task = FindBoardTask.create() as BehaviorControl<in Villager?>
+        options.add(
+            MojangPair.of<Int, BehaviorControl<in Villager?>?>(
+                10,
+                task
+            )
+        )
+        cir.setReturnValue(ImmutableList.copyOf(options))
+    }
+
+    fun ensureBoardMemoryModule(villager: Villager) {
+        villager.brain.ensureMemoryModules(listOf(
+            BountifulContent.MEM_MODULE_NEAREST_BOARD
+        ))
     }
 
     fun modifyAnvilResults(handler: AnvilMenu) {

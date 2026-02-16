@@ -54,8 +54,11 @@ class WalkToBoardTask(val speed: Float) :
 
         if (serverWorld != null && entity != null) {
             goalSpot?.let {
-                val boardEntity = serverWorld.getBlockEntity(it.pos, BountifulContent.BOARD_ENTITY).getOrNull()
-                boardEntity?.handleVillagerVisit(entity)
+                val dist = entity.blockPosition().center.distanceTo(it.pos.center)
+                if (dist < 3.0) {
+                    val boardEntity = serverWorld.getBlockEntity(it.pos, BountifulContent.BOARD_ENTITY).getOrNull()
+                    boardEntity?.handleVillagerVisit(entity)
+                }
             }
             entity.brain.eraseMemory(BountifulContent.MEM_MODULE_NEAREST_BOARD)
         }

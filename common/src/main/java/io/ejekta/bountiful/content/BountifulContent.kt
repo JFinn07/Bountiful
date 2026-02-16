@@ -29,7 +29,6 @@ import net.minecraft.world.entity.ai.village.poi.PoiTypes
 import net.minecraft.world.entity.npc.Villager
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Item
-import net.minecraft.world.level.block.state.BlockState
 import java.util.*
 import java.util.function.BiPredicate
 
@@ -80,7 +79,11 @@ object BountifulContent : KambrikAutoRegistrar {
 
     val MEM_MODULE_NEAREST_BOARD by MEM_MODULE_NEAREST_BOARD_INSTANCE
 
-    //val POI_BOUNTY_BOARD = "bountyboard".forVillagerPoi(MEM_MODULE_NEAREST_BOARD_INSTANCE, setOf(BOARD.value.defaultState), 1, 1)
+    val POI_BOUNTY_BOARD_KEY: ResourceKey<PoiType> = ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, Bountiful.id("bountyboard"))
+
+    val POI_BOUNTY_BOARD by "bountyboard".forRegistration(BuiltInRegistries.POINT_OF_INTEREST_TYPE) {
+        PoiType(setOf(BOARD.value.defaultBlockState()), 1, 64)
+    }
 
     val BOUNTY_INFO by "bounty_info".forComponent(BountyInfo.serializer())
     val BOUNTY_PING by "bounty_ping".forComponent(Boolean.serializer())
@@ -112,19 +115,21 @@ object BountifulContent : KambrikAutoRegistrar {
         Triggers
     }
 
-    private fun String.forVillagerPoi(memModule: Lazy<MemoryModuleType<GlobalPos>>, stateSet: Set<BlockState>, tickets: Int, searchDistance: Int): ResourceKey<PoiType>? {
-        val registryKey = ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, Bountiful.id(this))
+    /**
+     * Registers the bounty board POI into [Villager.POI_MEMORIES] so villagers
+     * can autonomously discover and path to nearby bounty boards. The POI type itself
+     * is already registered via Kambrik during the registration phase. This function
+     * must be called after registry freeze (e.g. during FMLCommonSetupEvent on NeoForge,
+     * or after KambrikRegistrar.doRegistrationsFor on Fabric).
+     */
+    fun registerVillagerPoiMemory() {
+        // Add to POI_MEMORIES so villagers know this is a POI type they should remember
         val poiMap = Villager.POI_MEMORIES.toMutableMap()
-        val bio: BiPredicate<Villager, Holder<PoiType>> = BiPredicate { vill, poiType ->
-            poiType.`is`(registryKey)
+        val bio: BiPredicate<Villager, Holder<PoiType>> = BiPredicate { _, poiType ->
+            poiType.`is`(POI_BOUNTY_BOARD_KEY)
         }
-        poiMap[memModule.value] = bio
-        // The following two lines need an AW/AT
+        poiMap[MEM_MODULE_NEAREST_BOARD] = bio
         Villager.POI_MEMORIES = poiMap
-        PoiTypes.register(BuiltInRegistries.POINT_OF_INTEREST_TYPE, registryKey, stateSet, tickets, searchDistance)
-        return registryKey
     }
-//
-//    private fun String.forSimplePoi(memModule: Lazy<MemoryModuleType<GlobalPos>>)
 
 }

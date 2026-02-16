@@ -278,9 +278,7 @@ object BountifulCommands {
                 val serverWorld = player.serverLevel()
 
                 val rep: (Holder<PoiType>) -> Boolean = { registryEntry ->
-                    //registryEntry.matchesKey(BountifulContent.POI_BOUNTY_BOARD)
-                    //TODO ? was like this in 1.20.4
-                    false
+                    registryEntry.`is`(BountifulContent.POI_BOUNTY_BOARD_KEY)
                 }
 
                 //serverWorld.poiManager.findClosest()

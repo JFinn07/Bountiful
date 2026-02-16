@@ -55,6 +55,7 @@ class BountifulModFabric : ModInitializer {
         BountifulIO.loadConfig()
 
         KambrikRegistrar.doRegistrationsFor(BountifulContent)
+        BountifulContent.registerVillagerPoiMemory()
 
         Bountybridge.registerServerMessages()
         Bountybridge.registerClientMessages()

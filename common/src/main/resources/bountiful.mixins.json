@@ -5,7 +5,8 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"BountifulAnvilMenuMixin",
-		"BountifulTaskMixin"
+		"BountifulTaskMixin",
+		"BountifulVillagerBrainMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

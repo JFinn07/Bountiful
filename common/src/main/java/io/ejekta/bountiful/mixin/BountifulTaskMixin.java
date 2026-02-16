@@ -14,6 +14,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(VillagerGoalPackages.class)
 public class BountifulTaskMixin {
+    @Inject(method = "getCorePackage", cancellable = true, at = @At("RETURN"))
+    private static void bo_getCoreTasks(VillagerProfession profession, float speed, CallbackInfoReturnable<ImmutableList<Pair<Integer, ? extends BehaviorControl<? super Villager>>>> cir) {
+        MixinHelper.INSTANCE.injectCoreTasks(profession, speed, cir);
+    }
+
     @Inject(method = "getIdlePackage", cancellable = true, at = @At("RETURN"))
     private static void bo_getIdleTasks(VillagerProfession profession, float speed, CallbackInfoReturnable<ImmutableList<Pair<Integer, ? extends BehaviorControl<? super Villager>>>> cir) {
         MixinHelper.INSTANCE.injectNewTasks(profession, speed, cir);

@@ -117,6 +117,19 @@ class BoardBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Bountiful
     // Holds pickups for villagers, key is profession and value are items to pick up
     private val villagerPickups = mutableMapOf<String, MutableSet<ItemStack>>()
 
+    /** Set when a bounty is completed; cleared after a villager visits */
+    private var needsVillagerVisit = false
+
+    /** Whether this board needs a villager to come visit (bounty was recently completed) */
+    fun hasPendingPickups(): Boolean {
+        return needsVillagerVisit
+    }
+
+    /** Clear the visit flag (called when a villager claims the visit) */
+    fun clearNeedsVillagerVisit() {
+        needsVillagerVisit = false
+    }
+
     val numCompleted: Int
         get() = playerData.values.sumOf { it.done }
 
@@ -187,8 +200,9 @@ class BoardBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Bountiful
         incrementCompletedBounties(player, timeTaken)
         // Fill pickups
         villagerPickupPopulate(holding.objs)
-        // Have a villager check on the board
-        getBestVillager(holding.objs)?.checkOnBoard(blockPos)
+        // Flag that a villager should come visit
+        needsVillagerVisit = true
+        // Villagers will naturally discover the board via POI and visit when pickups are pending
     }
 
     private fun addBountyToRandomSlot(stack: ItemStack) {
@@ -532,6 +546,7 @@ class BoardBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Bountiful
     fun handleVillagerVisit(villagerEntity: Villager) {
         //println("A villager is visiting the Bounty Board!")
         val serverWorld = level as? ServerLevel ?: return
+        needsVillagerVisit = false
         villagerDoPickup(villagerEntity)
         serverWorld.playSound(villagerEntity, villagerEntity.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 1f, 1f)
     }

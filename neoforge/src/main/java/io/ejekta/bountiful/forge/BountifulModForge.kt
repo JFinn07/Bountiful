@@ -112,6 +112,7 @@ class BountifulModForge {
         private fun commonSetup(evt: FMLCommonSetupEvent) {
             evt.enqueueWork {
                 Bountybridge.registerCompostables()
+                BountifulContent.registerVillagerPoiMemory()
             }
         }
 
